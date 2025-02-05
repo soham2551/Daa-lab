@@ -1,64 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void countingSort(int arr[], int size) {
-    // Find the maximum element in the array
-    int max = arr[0];
-    for (int i = 1; i < size; i++) {
-        if (arr[i] > max) {
-            max = arr[i];
-        }
+void countSort(int inputArray[], int N) {
+  
+    // Finding the maximum element of 
+    // array inputArray[]
+    int M = 0;
+    for (int i = 0; i < N; i++)
+        if (inputArray[i] > M)
+            M = inputArray[i];
+    
+    // Initializing countArray[] with 0
+    int* countArray = (int*)calloc(M + 1, sizeof(int));
+    
+    // Mapping each element of inputArray[] 
+    // as an index of countArray[] array
+    for (int i = 0; i < N; i++)
+        countArray[inputArray[i]]++;
+    
+    // Calculating prefix sum at every index
+    // of array countArray[]
+    for (int i = 1; i <= M; i++)
+        countArray[i] += countArray[i - 1];
+    
+    // Creating outputArray[] from countArray[] array
+    int* outputArray = (int*)malloc(N * sizeof(int));
+    for (int i = N - 1; i >= 0; i--) {
+        outputArray[countArray[inputArray[i]] - 1] = inputArray[i];
+        countArray[inputArray[i]]--;
     }
-
-    // Create a count array to store the count of each unique object
-    int *count = (int *)calloc(max + 1, sizeof(int));
-
-    // Store the count of each number
-    for (int i = 0; i < size; i++) {
-        count[arr[i]]++;
-    }
-
-    // Reconstruct the sorted array
-    int index = 0;
-    for (int i = 0; i <= max; i++) {
-        while (count[i] > 0) {
-            arr[index++] = i;
-            count[i]--;
-        }
-    }
-
-    // Free the allocated memory for count array
-    free(count);
+    
+    // Copying sorted elements back to inputArray[]
+    for (int i = 0; i < N; i++)
+        inputArray[i] = outputArray[i];
+    
+    // Freeing dynamically allocated memory
+    free(countArray);
+    free(outputArray);
 }
 
+// Driver code
 int main() {
-    int size;
-
-    // Take user input for the size of the array
-    printf("Enter the number of elements: ");
-    scanf("%d", &size);
-
-    // Allocate memory for the array
-    int *arr = (int *)malloc(size * sizeof(int));
-
-    // Take user input for the elements of the array
-    printf("Enter the elements (non-negative integers):\n");
-    for (int i = 0; i < size; i++) {
-        scanf("%d", &arr[i]);
-    }
-
-    // Perform counting sort
-    countingSort(arr, size);
-
-    // Print the sorted array
-    printf("Sorted array:\n");
-    for (int i = 0; i < size; i++) {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
-
-    // Free the allocated memory for the array
-    free(arr);
-
+  
+    // Input array
+    int inputArray[] = {4, 3, 12, 1, 5, 5, 3, 9};
+    int N = sizeof(inputArray) / sizeof(inputArray[0]);
+    
+    // Sorting the array
+    countSort(inputArray, N);
+    
+    // Printing the sorted array
+    for (int i = 0; i < N; i++)
+        printf("%d ", inputArray[i]);
+    
     return 0;
 }
