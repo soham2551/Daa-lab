@@ -1,0 +1,87 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to get the maximum value in the array
+int getMax(int arr[], int size) {
+    int max = arr[0];
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+    return max;
+}
+
+// Function to perform counting sort based on a specific digit
+void countingSort(int arr[], int size, int exp) {
+    int *output = (int *)malloc(size * sizeof(int)); // Output array
+    int count[10] = {0}; // Count array for digits (0-9)
+
+    // Store the count of occurrences in count[]
+    for (int i = 0; i < size; i++) {
+        count[(arr[i] / exp) % 10]++;
+    }
+
+    // Change count[i] so that it contains the actual position of this digit in output[]
+    for (int i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+
+    // Build the output array
+    for (int i = size - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+
+    // Copy the output array to arr[], so that arr[] now contains sorted numbers
+    for (int i = 0; i < size; i++) {
+        arr[i] = output[i];
+    }
+
+    // Free the allocated memory for output array
+    free(output);
+}
+
+// Main function to implement radix sort
+void radixSort(int arr[], int size) {
+    // Get the maximum number to know the number of digits
+    int max = getMax(arr, size);
+
+    // Do counting sort for every digit
+    for (int exp = 1; max / exp > 0; exp *= 10) {
+        countingSort(arr, size, exp);
+    }
+}
+
+int main() {
+    int size;
+
+    // Take user input for the size of the array
+    printf("Enter the number of elements: ");
+    scanf("%d", &size);
+
+    // Allocate memory for the array
+    int *arr = (int *)malloc(size * sizeof(int));
+
+    // Take user input for the elements of the array
+    printf("Enter the elements (non-negative integers):\n");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Perform radix sort
+    radixSort(arr, size);
+
+    // Print the sorted array
+    printf("Sorted array:\n");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    // Free the allocated memory for the array
+    free(arr);
+
+    return 0;
+}
