@@ -1,0 +1,58 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to perform selection sort
+void selectionSort(int arr[], int size) {
+    int i, j, minIndex, temp;
+
+    // One by one move the boundary of the unsorted subarray
+    for (i = 0; i < size - 1; i++) {
+        // Find the minimum element in the unsorted array
+        minIndex = i;
+        for (j = i + 1; j < size; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+
+        // Swap the found minimum element with the first element
+        if (minIndex != i) {
+            temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+    }
+}
+
+int main() {
+    int size;
+
+    // Take user input for the size of the array
+    printf("Enter the number of elements: ");
+    scanf("%d", &size);
+
+    // Allocate memory for the array
+    int *arr = (int *)malloc(size * sizeof(int));
+
+    // Take user input for the elements of the array
+    printf("Enter the elements:\n");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Perform selection sort
+    selectionSort(arr, size);
+
+    // Print the sorted array
+    printf("Sorted array:\n");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    // Free the allocated memory for the array
+    free(arr);
+
+    return 0;
+}
